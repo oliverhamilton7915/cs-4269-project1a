@@ -1,9 +1,17 @@
+# Group Members
+# - Max Cummings
+# - Alex Cho
+# - Jacob Feldstein
+# - Oliver Hamilton
+
 import sys
 import course_dictionary
 
 def main(argv):
     test = course_dictionary.create_course_dict()
     #Test to see if all prereqs are in the file.
+    for key, value in test.items():
+        print(key, value)
     prereq_list = [single_course for vals in test.values()
                    for some_prereqs in vals.prereqs for single_course in some_prereqs]
     for prereq in prereq_list:

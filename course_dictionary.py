@@ -9,7 +9,7 @@ def create_course_dict():
     Values: namedtuple of the form('name, prereqs, credits')
             prereqs is a tuple of prereqs where each prereq has the same form as the keys
     """
-    wb = load_workbook('newcatalog.xlsx')
+    wb = load_workbook('CourseCatalogSpring2020.xlsx')
     catalog = wb.get_sheet_by_name('catalog')
     Course = namedtuple('Course', 'program, designation')
     CourseInfo = namedtuple('CourseInfo', 'credits, terms, prereqs')
