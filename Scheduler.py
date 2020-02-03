@@ -1,8 +1,14 @@
 class Scheduler:
     def __init__(self, catalog, goals, initial):
+        #
         # catalog: dictionary object holding all course information and prerequisites
+        #
         # goals: list object holding all courses necessary for completion by the planner
+        #       Note: this object will be dynamicly adjusted at runtime. As we 'plan' courses that meet our goals,
+        #             we are going to pop() elements from this 'goal' list. See: formulate_schedule() below.
+        #
         # initial: list object holding all initially completed courses
+        #
         self.catalog = catalog
         self.goal_courses = goals
         self.initial_courses = initial
@@ -11,16 +17,55 @@ class Scheduler:
         self.satisfied_prereqs = set(initial)
 
         # Elements will be added to this list as we perform our planning
-        self.schedule = []
+        self.terms = []
 
-    # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course
-    # It will use self.satisfied prereqs and self.catalog[goal] to see what options for prereqs there are for goal.
-    def get_minimal_prereqs(self, goal):
-        pass
+
+    # This is the method we call from our parent course_scheduler function from in group7_scheduler.py.
+    # We want it to start with an initially empty schedule that
+    def formulate_schedule(self):
+        assert(len(self.terms) == 0)  # We only want to call this method when we are starting from scratch.
+        season = "Spring"
+        years = ["Freshman", "Sophomore", "Junior", "Senior"]
+        year_index = 0
+        while len(self.goal_courses) > 0:
+            if season == "Spring" and year_index == 3: # this is after senior spring, we would expect to be graduating!
+                return [] # Empty schedule - this is the desired behavior specified by the spec!
+            if season == "Spring": # Go to next year
+                season = "Fall"
+                year_index += 1
+            else: # Stay on same year
+                season = "Spring"
+            self.formulate_term(season, years[year_index], season)
+
+        flat_schedule = []
+        for term_schedule in self.terms:
+            for c in term_schedule:
+                flat_schedule.append(c)
+        return flat_schedule
 
     # Guidelines:
     # 1. minimum 12 credits/semester, maximum 18 credits/semester
     # 2. schedule should include as few semesters as possible
-    # 3. if full schedule cannot fit into 8 total terms (i.e. 4 years in college), then we should return None (see spec).
-    def add_to_schedule(self, course):
+    # 3. if full schedule cannot fit into 8 total terms (i.e. 4 years college), then we should return None (see spec).
+    def formulate_term(self, season, year):
+        term_schedule = []
+        term_credits = 0
+
+        # General workflow idea:
+        #   1. access self.goal_courses. This holds the remaining requirements we have to meet to satisfy our search.
+        #       Imagine it like a stack. That our depth-first regression solver is operating on.
+        #   2. pop() element from list, see if it is a class (or abstract requirement with 0 associated credits)
+        #       that can be taken in the current term. If so, add it to the term. Increment credits.
+        #   3. Otherwise, you will want to call get_minimal_prereqs(class) to see what must be taken before it.
+        #   4. Those must be push()-ed to the self.goal_courses stack. If those are pre-requirements to our current
+        #       goal course objective, they must be taken first and therefore have higher precedence in our stack.
+        #   5. As long as in each iteration, either (1) a class is removed from the stack and added to term or (2)
+        #       a set of pre-requirements for a class are pushed on top of it in the stack, we loop in a process where
+        #       we build out the rest of the term with useful, satisfiable classes.
+        #   6. Lastly, for each class in our term, we want to add that to our set of self.satisfied_prereqs for
+        #       reference in later terms where we continue to build out our college schedule.
+
+    # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course
+    # It will use self.satisfied prereqs and self.catalog[goal] to see what options for prereqs there are for goal.
+    def get_minimal_prereqs(self, goal):
         pass

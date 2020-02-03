@@ -6,6 +6,7 @@
 
 import sys
 import course_dictionary
+from Scheduler import Scheduler
 
 def main(argv):
 
@@ -58,7 +59,8 @@ def main(argv):
 # goal_conditions: list object holding all courses
 # initial_state: list object holding all completed courses
 def course_scheduler(course_descriptions, goal_conditions, initial_state):
-    pass
+    schedule = Scheduler(course_descriptions, goal_conditions, initial_state)
+    return schedule.formulate_schedule()
 
 # ---TESTS---:
 
