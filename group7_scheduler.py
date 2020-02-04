@@ -23,6 +23,12 @@ def main(argv):
     #     if course.program == 'CS':
     #        print(course, course_dict[course])
     #
+    # NOTE: this is a series of print statements representing (key, value) pairs. the key is the course formatted like:
+    #   Course(program='CS', designation='3860'). The value is the information associated with that course. Formatted:
+    #   CourseInfo(credits=3, terms=('Spring', 'Fall'), prereqs=((('CS', '2231'),),))
+    #
+    #   Check example two to see this in greater detail.
+    #
     # --Output--:
     # Course(program='CS', designation='3860') CourseInfo(credits=3, terms=('Spring', 'Fall'), prereqs=((('CS', '2231'),),))
     # Course(program='CS', designation='3861') CourseInfo(credits=3, terms=('Summer', 'Spring', 'Fall'), prereqs=((('CS', '2231'),),))

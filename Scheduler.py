@@ -26,7 +26,7 @@ class Scheduler:
         assert(len(self.terms) == 0)  # We only want to call this method when we are starting from scratch.
         season = "Spring"
         years = ["Freshman", "Sophomore", "Junior", "Senior"]
-        year_index = 0
+        year_index = -1
         while len(self.goal_courses) > 0:
             if season == "Spring" and year_index == 3: # this is after senior spring, we would expect to be graduating!
                 return [] # Empty schedule - this is the desired behavior specified by the spec!
@@ -58,10 +58,10 @@ class Scheduler:
         #       if it is an abstract course objective (i.e. 0 credits) with all/some pre-requirements in the current
         #       term. If so, add it to the term. Increment credits as necessary.
         #   3. Otherwise, you will want to call get_minimal_prereqs(class) to see what must be taken before it.
-        #   4. Those must be push()-ed to the self.goal_courses stack. If those are pre-requirements to our current
-        #       goal course objective, they must be taken first and therefore have higher precedence in our stack.
+        #   4. Those must be pushed to the self.goal_courses stack. If those are pre-requirements to our current
+        #       goal course objective, they must be taken first.
         #   5. As long as in each iteration, either (1) a class is removed from the stack and added to term or (2)
-        #       a set of pre-requirements for a class are pushed on top of it in the stack, we loop in a process where
+        #       a set of pre-requirements for a class are pushed to the stack, we loop in a process where
         #       we build out the rest of the term with useful, satisfiable classes.
         #   6. Lastly, for each class in our term, we want to add that to our set of self.satisfied_prereqs for
         #       reference in later terms where we continue to build out our college schedule.
@@ -75,7 +75,7 @@ class Scheduler:
     #   pre-requirements live in that term. Also, we wont be able to add its pre-requirements to our goal_courses since
     #   they are already in the current term!!
     # it must return the selected goal objective (i.e. ("CS", "4260")) AND it must remove that class from self.goals
-    def pick_goal_objective(self, goal, semester_schedule):
+    def pick_goal_objective(self, semester_schedule):
         pass
 
     # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course
