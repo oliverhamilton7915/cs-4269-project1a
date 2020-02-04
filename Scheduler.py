@@ -35,7 +35,7 @@ class Scheduler:
                 year_index += 1
             else: # Stay on same year
                 season = "Spring"
-            self.formulate_term(season, years[year_index], season)
+            self.formulate_term(season, years[year_index])
 
         flat_schedule = []
         for term_schedule in self.terms:
@@ -52,10 +52,11 @@ class Scheduler:
         term_credits = 0
 
         # General workflow idea:
-        #   1. access self.goal_courses. This holds the remaining requirements we have to meet to satisfy our search.
-        #       Imagine it like a stack. That our depth-first regression solver is operating on.
-        #   2. pop() element from list, see if it is a class (or abstract requirement with 0 associated credits)
-        #       that can be taken in the current term. If so, add it to the term. Increment credits.
+        #   1. make a call to pick_goal_objective - this will return a course we want to consider adding to the schedule
+        #   2. See if it is a class (or abstract requirement with 0 associated credits) that can be taken in the current
+        #       term. This will be the case if it is a class with no remaining pre-requirements in the current term OR
+        #       if it is an abstract course objective (i.e. 0 credits) with all/some pre-requirements in the current
+        #       term. If so, add it to the term. Increment credits as necessary.
         #   3. Otherwise, you will want to call get_minimal_prereqs(class) to see what must be taken before it.
         #   4. Those must be push()-ed to the self.goal_courses stack. If those are pre-requirements to our current
         #       goal course objective, they must be taken first and therefore have higher precedence in our stack.
@@ -64,8 +65,21 @@ class Scheduler:
         #       we build out the rest of the term with useful, satisfiable classes.
         #   6. Lastly, for each class in our term, we want to add that to our set of self.satisfied_prereqs for
         #       reference in later terms where we continue to build out our college schedule.
+        pass
+
+    # This method will be called from our formulate_term method above when it is looking for a course to either
+    #   (1) add to the current term OR
+    #   (2) find its pre-requirements to take in the current term
+    #   Note: we do not want to return a non-abstract course objective that has its remaining pre-requirements scheduled
+    #   in the current term. Why? Well, that course will not be able to fit into the current term because some of its
+    #   pre-requirements live in that term. Also, we wont be able to add its pre-requirements to our goal_courses since
+    #   they are already in the current term!!
+    # it must return the selected goal objective (i.e. ("CS", "4260")) AND it must remove that class from self.goals
+    def pick_goal_objective(self, goal, semester_schedule):
+        pass
 
     # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course
-    # It will use self.satisfied prereqs and self.catalog[goal] to see what options for prereqs there are for goal.
+    # It will use self.satisfied pre-requirements and self.catalog[goal] to see what options for pre-requirements
+    # there are for goal.
     def get_minimal_prereqs(self, goal):
         pass
