@@ -85,6 +85,15 @@ class Scheduler:
         if self.catalog[goal].prereqs in self.satisfied_prereqs:
             return ()
         else:
-            return self.catalog[goal].prereqs
+            min_set_size = 100
+            prereqs = self.catalog[goal].prereqs
+            min_prereqs = ()
+            for x in len(prereqs):
+                if len(prereqs[x]) < min_set_size:
+                    min_set_size = len(prereqs[x])
+                    min_prereqs = prereqs[x]
+            return min_prereqs
+
+
 
 
