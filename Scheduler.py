@@ -82,11 +82,11 @@ class Scheduler:
     # It will use self.satisfied_prereqs and self.catalog[goal] to see what options for pre-requirements
     # there are for goal.
     def get_minimal_prereqs(self, goal):
-        if self.catalog[goal].prereqs in self.satisfied_prereqs:
+        prereqs = self.catalog[goal].prereqs
+        if prereqs in self.satisfied_prereqs:
             return ()
         else:
             min_set_size = 100
-            prereqs = self.catalog[goal].prereqs
             min_prereqs = ()
             for x in len(prereqs):
                 if len(prereqs[x]) < min_set_size:
