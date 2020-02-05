@@ -4,7 +4,7 @@ class Scheduler:
         # catalog: dictionary object holding all course information and prerequisites
         #
         # goals: list object holding all courses necessary for completion by the planner
-        #       Note: this object will be dynamicly adjusted at runtime. As we 'plan' courses that meet our goals,
+        #       Note: this object will be dynamically adjusted at runtime. As we 'plan' courses that meet our goals,
         #             we are going to pop() elements from this 'goal' list. See: formulate_schedule() below.
         #
         # initial: list object holding all initially completed courses
@@ -79,7 +79,12 @@ class Scheduler:
         pass
 
     # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course
-    # It will use self.satisfied pre-requirements and self.catalog[goal] to see what options for pre-requirements
+    # It will use self.satisfied_prereqs and self.catalog[goal] to see what options for pre-requirements
     # there are for goal.
     def get_minimal_prereqs(self, goal):
-        pass
+        if self.catalog[goal].prereqs in self.satisfied_prereqs:
+            return ()
+        else:
+            return self.catalog[goal].prereqs
+
+

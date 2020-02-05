@@ -21,7 +21,7 @@ def main(argv):
     #
     # for course in course_dict:
     #     if course.program == 'CS':
-    #        print(course, course_dict[course])
+    #         print(course, course_dict[course])
     #
     # NOTE: this is a series of print statements representing (key, value) pairs. the key is the course formatted like:
     #   Course(program='CS', designation='3860'). The value is the information associated with that course. Formatted:
