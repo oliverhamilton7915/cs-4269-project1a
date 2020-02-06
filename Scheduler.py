@@ -93,7 +93,3 @@ class Scheduler:
                     min_set_size = len(prereqs[x])
                     min_prereqs = prereqs[x]
             return min_prereqs
-
-
-
-
