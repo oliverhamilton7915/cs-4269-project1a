@@ -105,10 +105,10 @@ class Scheduler:
     # it must return the selected goal objective (i.e. ("CS", "4260")) AND it must remove that class from self.goal_courses
     def pick_goal_objective(self, term_schedule):
         #Retrieves the last item in the goal_courses list
-    	length_goal_courses = len(self.goal_courses)
+        length_goal_courses = len(self.goal_courses)
         found_valid_course = False
         #check for length<1
-    	while length_goal_courses>0 and not found_valid_course:
+        while length_goal_courses>0 and not found_valid_course:
             possible_course = self.goal_courses[length_goal_courses-1]
             course_credits = self.catalog[possible_course][0]
             course_prereqs = self.catalog[possible_course][2]
@@ -117,7 +117,7 @@ class Scheduler:
                 for prereq in course_prereqs:
                     if prereq not in self.satisfied_prereqs:
                         #cant return-preqeqs not already completed
-                        # valid = False
+                        valid = False
                 if valid:
                     found_valid_course = True
                     return possible_course
@@ -125,7 +125,7 @@ class Scheduler:
                     length_goal_courses-=1
             else:
                 # handle removing from self.goal_courses in above method
-        		return possible_course
+                return possible_course
         return None
 
 
@@ -137,9 +137,9 @@ class Scheduler:
     # there are for goal.
     def get_minimal_prereqs(self, goal):
         prereqs = self.catalog[goal].prereqs
-        for x in len(prereqs):
+        for x in range(len(prereqs)):
             count = 0
-            for y in len(prereqs[x]):
+            for y in range(len(prereqs[x])):
                 if prereqs[x][y] in self.satisfied_prereqs:
                     count += 1
             if count == len(prereqs[x]):
@@ -147,10 +147,10 @@ class Scheduler:
 
         min_set_size = 1000
         return_set = []
-        for x in len(prereqs):
+        for x in range(len(prereqs)):
             count = 0
             prereq_set = []
-            for y in len(prereqs[x]):
+            for y in range(len(prereqs[x])):
                 if prereqs[x][y] in self.satisfied_prereqs:
                     count += 1
                 else:
