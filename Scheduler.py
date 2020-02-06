@@ -69,8 +69,8 @@ class Scheduler:
         #       reference in later terms where we continue to build out our college schedule.
 
         possible_course = self.pick_goal_objective(term_schedule)
-        course_credits = self.catalog[possible_course][0]
-        course_prereqs = self.catalog[possible_course][2]
+        course_credits = self.catalog[possible_course].credits
+        course_prereqs = self.catalog[possible_course].prereqs
         # Abstract class case: check to see that all prereqs are either in current semester or have already been taken
         # must address case where we have run out of remaining time 
         can_add_class = True
@@ -127,10 +127,6 @@ class Scheduler:
                 # handle removing from self.goal_courses in above method
                 return possible_course
         return None
-
-
-
-        
 
     # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course
     # It will use self.satisfied_prereqs and self.catalog[goal] to see what options for pre-requirements
