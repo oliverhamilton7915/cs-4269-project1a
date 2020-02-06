@@ -83,13 +83,11 @@ class Scheduler:
     def get_minimal_prereqs(self, goal):
         prereqs = self.catalog[goal].prereqs
         for x in len(prereqs):
-            if prereqs[x] in self.satisfied_prereqs:
+            count = 0
+            for y in len(prereqs[x]):
+                if prereqs[x][y] in self.satisfied_prereqs:
+                    count += 1
+            if count == len(prereqs[x]):
                 return ()
-        else:
-            min_set_size = 100
-            min_prereqs = ()
-            for x in len(prereqs):
-                if len(prereqs[x]) < min_set_size:
-                    min_set_size = len(prereqs[x])
-                    min_prereqs = prereqs[x]
-            return min_prereqs
+
+

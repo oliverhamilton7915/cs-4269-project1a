@@ -17,6 +17,14 @@ def main(argv):
     # That code was provided to us.
     course_dict = course_dictionary.create_course_dict()
 
+    # Test code to help visualize what each call returns
+    # calc = course_dict[('CS', 'calculus')]
+    # print(calc.prereqs)
+    # print(len(calc.prereqs))
+    # print(calc.prereqs[0])
+    # print(len(calc.prereqs[0]))
+    # print(calc.prereqs[0][0])
+
     # Code Example 1: printing all CS Courses.
     #
     # for course in course_dict:
