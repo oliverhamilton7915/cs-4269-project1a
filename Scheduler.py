@@ -113,9 +113,9 @@ class Scheduler:
         while length_goal_courses > 0 and not found_valid_course:
             possible_course = self.goal_courses[length_goal_courses-1]
             course_credits = self.catalog[possible_course].credits
-            course_prereqs = self.catalog[possible_course].prereqs
+            course_prereqs = self.get_minimal_prereqs(possible_course)
             if course_credits > 0:
-                found_valid_course = True
+                valid = True
                 for prereq in course_prereqs:
                     if prereq not in self.satisfied_prereqs:
                         #cant return-preqeqs not already completed
