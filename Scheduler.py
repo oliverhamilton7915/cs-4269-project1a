@@ -74,7 +74,7 @@ class Scheduler:
         # Abstract class case: check to see that all prereqs are either in current semester or have already been taken
         # must address case where we have run out of remaining time 
         can_add_class = True
-        if course_credits==0:
+        if course_credits == 0:
             for prereq in course_prereqs:
                 if prereq not in self.satisfied_prereqs:
                     if prereq not in self.unsatisfied_prereqs:
@@ -95,14 +95,16 @@ class Scheduler:
             term_credits += course_credits
         pass
 
-    # This method will be called from our formulate_term method above when it is looking for a course to either
+    #   This method will be called from our formulate_term method above when it is looking for a course to either
+    #
     #   (1) add to the current term OR
     #   (2) find its pre-requirements to take in the current term
     #   Note: we do not want to return a non-abstract course objective that has its remaining pre-requirements scheduled
     #   in the current term. Why? Well, that course will not be able to fit into the current term because some of its
     #   pre-requirements live in that term. Also, we wont be able to add its pre-requirements to our goal_courses since
     #   they are already in the current term!!
-    # it must return the selected goal objective (i.e. ("CS", "4260")) AND it must remove that class from self.goal_courses
+    #   it must return the selected goal objective (i.e. ("CS", "4260")) AND it must remove that class from self.goal_
+    #   courses
     def pick_goal_objective(self, term_schedule):
         #Retrieves the last item in the goal_courses list
         length_goal_courses = len(self.goal_courses)
@@ -113,7 +115,7 @@ class Scheduler:
             course_credits = self.catalog[possible_course].credits
             course_prereqs = self.catalog[possible_course].prereqs
             if course_credits > 0:
-                valid = True
+                found_valid_course = True
                 for prereq in course_prereqs:
                     if prereq not in self.satisfied_prereqs:
                         #cant return-preqeqs not already completed
@@ -122,7 +124,7 @@ class Scheduler:
                     found_valid_course = True
                     return possible_course
                 else:
-                    length_goal_courses-=1
+                    length_goal_courses -= 1
             else:
                 # handle removing from self.goal_courses in above method
                 return possible_course
