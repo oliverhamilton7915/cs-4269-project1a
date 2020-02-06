@@ -17,11 +17,19 @@ def main(argv):
     # That code was provided to us.
     course_dict = course_dictionary.create_course_dict()
 
+    # Test code to help visualize what each call returns
+    # calc = course_dict[('CS', 'calculus')]
+    # print(calc.prereqs)
+    # print(len(calc.prereqs))
+    # print(calc.prereqs[0])
+    # print(len(calc.prereqs[0]))
+    # print(calc.prereqs[0][0])
+
     # Code Example 1: printing all CS Courses.
     #
     # for course in course_dict:
     #     if course.program == 'CS':
-    #        print(course, course_dict[course])
+    #         print(course, course_dict[course])
     #
     # NOTE: this is a series of print statements representing (key, value) pairs. the key is the course formatted like:
     #   Course(program='CS', designation='3860'). The value is the information associated with that course. Formatted:

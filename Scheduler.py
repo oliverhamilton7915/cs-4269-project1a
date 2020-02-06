@@ -4,7 +4,7 @@ class Scheduler:
         # catalog: dictionary object holding all course information and prerequisites
         #
         # goals: list object holding all courses necessary for completion by the planner
-        #       Note: this object will be dynamicly adjusted at runtime. As we 'plan' courses that meet our goals,
+        #       Note: this object will be dynamically adjusted at runtime. As we 'plan' courses that meet our goals,
         #             we are going to pop() elements from this 'goal' list. See: formulate_schedule() below.
         #
         # initial: list object holding all initially completed courses
@@ -19,7 +19,6 @@ class Scheduler:
 
         # Elements will be added to this list as we perform our planning
         self.terms = []
-
 
     # This is the method we call from our parent course_scheduler function from in group7_scheduler.py.
     # We want it to start with an initially empty schedule that
@@ -134,7 +133,29 @@ class Scheduler:
         
 
     # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course
-    # It will use self.satisfied pre-requirements and self.catalog[goal] to see what options for pre-requirements
+    # It will use self.satisfied_prereqs and self.catalog[goal] to see what options for pre-requirements
     # there are for goal.
     def get_minimal_prereqs(self, goal):
-        pass
+        prereqs = self.catalog[goal].prereqs
+        for x in len(prereqs):
+            count = 0
+            for y in len(prereqs[x]):
+                if prereqs[x][y] in self.satisfied_prereqs:
+                    count += 1
+            if count == len(prereqs[x]):
+                return []
+
+        min_set_size = 1000
+        return_set = []
+        for x in len(prereqs):
+            count = 0
+            prereq_set = []
+            for y in len(prereqs[x]):
+                if prereqs[x][y] in self.satisfied_prereqs:
+                    count += 1
+                else:
+                    prereq_set.append(prereqs[x][y])
+            if (len(prereqs[x]) - count) < min_set_size:
+                return_set = prereq_set
+                min_set_size = (len(prereqs[x]) - count)
+        return return_set
