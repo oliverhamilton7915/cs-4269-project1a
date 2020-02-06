@@ -19,7 +19,6 @@ class Scheduler:
         # Elements will be added to this list as we perform our planning
         self.terms = []
 
-
     # This is the method we call from our parent course_scheduler function from in group7_scheduler.py.
     # We want it to start with an initially empty schedule that
     def formulate_schedule(self):
@@ -83,8 +82,9 @@ class Scheduler:
     # there are for goal.
     def get_minimal_prereqs(self, goal):
         prereqs = self.catalog[goal].prereqs
-        if prereqs in self.satisfied_prereqs:
-            return ()
+        for x in len(prereqs):
+            if prereqs[x] in self.satisfied_prereqs:
+                return ()
         else:
             min_set_size = 100
             min_prereqs = ()
