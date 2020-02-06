@@ -88,6 +88,19 @@ class Scheduler:
                 if prereqs[x][y] in self.satisfied_prereqs:
                     count += 1
             if count == len(prereqs[x]):
-                return ()
+                return []
 
-
+        min_set_size = 1000
+        return_set = []
+        for x in len(prereqs):
+            count = 0
+            prereq_set = []
+            for y in len(prereqs[x]):
+                if prereqs[x][y] in self.satisfied_prereqs:
+                    count += 1
+                else:
+                    prereq_set.append(prereqs[x][y])
+            if (len(prereqs[x]) - count) < min_set_size:
+                return_set = prereq_set
+                min_set_size = (len(prereqs[x]) - count)
+        return return_set
