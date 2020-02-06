@@ -127,6 +127,7 @@ class Scheduler:
         	else:
         		# handle removing from self.goal_courses in above method
         		return possible_course
+        return None
 
 
 
