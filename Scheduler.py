@@ -128,7 +128,6 @@ class Scheduler:
             else:
                 # handle removing from self.goal_courses in above method
                 return possible_course
-        return None
 
     # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course
     # It will use self.satisfied_prereqs and self.catalog[goal] to see what options for pre-requirements
