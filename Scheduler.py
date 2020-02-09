@@ -15,7 +15,7 @@ class Scheduler:
 
         # Here we make this into a set for quick lookup
         self.satisfied_prereqs = set(initial)
-        self.unsatisfied_prereqs = set(goal_courses)
+        self.unsatisfied_prereqs = set(self.goal_courses)
 
         # Elements will be added to this list as we perform our planning
         self.terms = []
@@ -68,75 +68,75 @@ class Scheduler:
         #   6. Lastly, for each class in our term, we want to add that to our set of self.satisfied_prereqs for
         #       reference in later terms where we continue to build out our college schedule.
 
-        possible_course = pick_goal_objective(self, term_schedule)
-        course_credits = self.catalog[possible_course][0]
-        course_prereqs = self.catalog[possible_course][2]
+        possible_course = self.pick_goal_objective(term_schedule)
+        course_credits = self.catalog[possible_course].credits
+        course_prereqs = self.catalog[possible_course].prereqs
         # Abstract class case: check to see that all prereqs are either in current semester or have already been taken
         # must address case where we have run out of remaining time 
         can_add_class = True
-        if(course_credits==0):
-        	for prereq in course_prereqs:
-        		if(prereq not in self.satisfied_prereqs):
-        			if(prereq not in self.unsatisfied_prereqs):
-        				self.get_minimal_prereqs(self, prereq)
-        			can_add_class = False
+        if course_credits == 0:
+            for prereq in course_prereqs:
+                if prereq not in self.satisfied_prereqs:
+                    if prereq not in self.unsatisfied_prereqs:
+                        self.get_minimal_prereqs(prereq)
+                    can_add_class = False
         else: #not an abstract class
-        	for prereq in course_prereqs:
-        		if (prereq in term_set or prereq not in satisfied_prereqs):
-        			can_add_class = False
-        		if (term_credits + course_credits > 18):
-        			can_add_class = False
-        if (can_add_class):
-        	term_schedule.append(possible_course)
-        	term_set.add(possible_course)
-        	unsatisfied_prereqs.remove(possible_course)
-        	satisfied_prereqs.add(possible_course)
-        	goal_courses.remove(possible_course)
-        	term_credits += course_credits	
+            for prereq in course_prereqs:
+                if prereq in term_set or prereq not in self.satisfied_prereqs:
+                    can_add_class = False
+                if term_credits + course_credits > 18:
+                    can_add_class = False
+        if can_add_class:
+            term_schedule.append(possible_course)
+            term_set.add(possible_course)
+            self.unsatisfied_prereqs.remove(possible_course)
+            self.satisfied_prereqs.add(possible_course)
+            self.goal_courses.remove(possible_course)
+            term_credits += course_credits
         pass
 
-    # This method will be called from our formulate_term method above when it is looking for a course to either
+    #   This method will be called from our formulate_term method above when it is looking for a course to either
+    #
     #   (1) add to the current term OR
     #   (2) find its pre-requirements to take in the current term
     #   Note: we do not want to return a non-abstract course objective that has its remaining pre-requirements scheduled
     #   in the current term. Why? Well, that course will not be able to fit into the current term because some of its
     #   pre-requirements live in that term. Also, we wont be able to add its pre-requirements to our goal_courses since
     #   they are already in the current term!!
-    # it must return the selected goal objective (i.e. ("CS", "4260")) AND it must remove that class from self.goal_courses
+    #   it must return the selected goal objective (i.e. ("CS", "4260")) AND it must remove that class from self.goal_
+    #   courses
     def pick_goal_objective(self, term_schedule):
-    	#Retrieves the last item in the goal_courses list
-    	length_goal_courses = len(self.goal_courses)
-    	found_valid_course = False
-    	#check for length<1
-    	while(length_goal_courses>0 and not found_valid_course):
-    		possible_course = self.goal_courses[length_goal_courses-1]
-    		course_credits = self.catalog[possible_course][0]
-        	course_prereqs = self.catalog[possible_course][2]
-        	if(course_credits>0):
-        		valid = True
-        		for prereq in course_prereqs:
-        			if(prereq not in self.satisfied_prereqs):
-        				#cant return-preqeqs not already completed
-        				valid = False
-        		if(Valid):
-        			found_valid_course = True
-        			return possible_course
-        		else:
-        			length_goal_courses-=1
-        	else:
-        		# handle removing from self.goal_courses in above method
-        		return possible_course
-        return None
-        
+        #Retrieves the last item in the goal_courses list
+        length_goal_courses = len(self.goal_courses)
+        found_valid_course = False
+        #check for length<1
+        while length_goal_courses > 0 and not found_valid_course:
+            possible_course = self.goal_courses[length_goal_courses-1]
+            course_credits = self.catalog[possible_course].credits
+            course_prereqs = self.get_minimal_prereqs(possible_course)
+            if course_credits > 0:
+                valid = True
+                for prereq in course_prereqs:
+                    if prereq not in self.satisfied_prereqs:
+                        #cant return-preqeqs not already completed
+                        valid = False
+                if valid:
+                    found_valid_course = True
+                    return possible_course
+                else:
+                    length_goal_courses -= 1
+            else:
+                # handle removing from self.goal_courses in above method
+                return possible_course
 
     # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course
     # It will use self.satisfied_prereqs and self.catalog[goal] to see what options for pre-requirements
     # there are for goal.
     def get_minimal_prereqs(self, goal):
         prereqs = self.catalog[goal].prereqs
-        for x in len(prereqs):
+        for x in range(len(prereqs)):
             count = 0
-            for y in len(prereqs[x]):
+            for y in range(len(prereqs[x])):
                 if prereqs[x][y] in self.satisfied_prereqs:
                     count += 1
             if count == len(prereqs[x]):
@@ -144,10 +144,10 @@ class Scheduler:
 
         min_set_size = 1000
         return_set = []
-        for x in len(prereqs):
+        for x in range(len(prereqs)):
             count = 0
             prereq_set = []
-            for y in len(prereqs[x]):
+            for y in range(len(prereqs[x])):
                 if prereqs[x][y] in self.satisfied_prereqs:
                     count += 1
                 else:
