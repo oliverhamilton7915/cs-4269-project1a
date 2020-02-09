@@ -111,11 +111,11 @@ class Scheduler:
         found_valid_course = False
         #check for length<1
         while length_goal_courses > 0 and not found_valid_course:
-            max_ = self.catalog[0][1]
+            max_course_number = self.catalog[0][1]
             max_course = self.goal_courses[0]
             for course in self.goal_courses:
-                if max < course[1]:
-                    max =  course[1]
+                if max_course_number < course[1]:
+                    max_course_number =  course[1]
                     max_course = course
 
             possible_course = max_course
