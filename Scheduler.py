@@ -120,7 +120,6 @@ class Scheduler:
         				valid = False
         		if(Valid):
         			found_valid_course = True
-
         			return possible_course
         		else:
         			length_goal_courses-=1
@@ -128,9 +127,6 @@ class Scheduler:
         		# handle removing from self.goal_courses in above method
         		return possible_course
         return None
-
-
-
         
 
     # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course
