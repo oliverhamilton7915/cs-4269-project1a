@@ -111,7 +111,15 @@ class Scheduler:
         found_valid_course = False
         #check for length<1
         while length_goal_courses > 0 and not found_valid_course:
-            possible_course = self.goal_courses[length_goal_courses-1]
+            max_ = self.catalog[0][1]
+            max_course = self.goal_courses[0]
+            for course in self.goal_courses:
+                if max < course[1]:
+                    max =  course[1]
+                    max_course = course
+
+            possible_course = max_course
+            # possible_course = self.goal_courses[length_goal_courses-1]
             course_credits = self.catalog[possible_course].credits
             course_prereqs = self.get_minimal_prereqs(possible_course)
             if course_credits > 0:
