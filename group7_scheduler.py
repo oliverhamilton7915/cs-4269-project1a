@@ -15,6 +15,8 @@ def main(argv):
     #
     # Check out course_dictionary.py to see how that was done.
     # That code was provided to us.
+
+    print("Creating Course catalog...")
     course_dict = course_dictionary.create_course_dict()
 
     # Test code to help visualize what each call returns
@@ -60,12 +62,18 @@ def main(argv):
     # ('Spring', 'Fall')
     # ((('CS', '2201'),),)
 
+    print("Running tests...")
     # Test1: to see if all prerequirements (prereq) are in the file.
     assert(len(get_unsatisfied_prereqs(course_dict)) == 0)
-
     # Test2: to see if all courses have a term and credits
     assert(len(get_ambiguous_courses(course_dict)) == 0)
 
+    print("Performing course search...")
+    goal_conditions = [("CS", "major"), ("MATH", "4650"), ("MATH", "3640")]
+    initial_state = []
+    schedule = course_scheduler(course_dict, goal_conditions, initial_state)
+    print("Schedule output: ")
+    pretty_print(schedule)
 
 # ---SCHEDULER CODE---:
 
@@ -75,6 +83,10 @@ def main(argv):
 def course_scheduler(course_descriptions, goal_conditions, initial_state):
     schedule = Scheduler(course_descriptions, goal_conditions, initial_state)
     return schedule.formulate_schedule()
+
+def pretty_print(schedule):
+    for ((debt, num), (season, year), credits) in schedule:
+        print("Course: " + debt + " " + num + ", Term: " + year + " " + season + ", Credits: " + str(credits))
 
 # ---TESTS---:
 
