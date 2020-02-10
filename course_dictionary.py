@@ -1,3 +1,9 @@
+# Group Members
+# - Max Cummings
+# - Alex Cho
+# - Jacob Feldstein
+# - Oliver Hamilton
+
 import re
 from collections import namedtuple
 from openpyxl import load_workbook

@@ -4,6 +4,7 @@
 # - Jacob Feldstein
 # - Oliver Hamilton
 
+import time
 import sys
 import course_dictionary
 from Scheduler import Scheduler
@@ -17,6 +18,7 @@ def main(argv):
     # That code was provided to us.
 
     print("Creating Course catalog...")
+    print()
     course_dict = course_dictionary.create_course_dict()
 
     # Test code to help visualize what each call returns
@@ -63,16 +65,39 @@ def main(argv):
     # ((('CS', '2201'),),)
 
     print("Running tests...")
+    print()
     # Test1: to see if all prerequirements (prereq) are in the file.
     assert(len(get_unsatisfied_prereqs(course_dict)) == 0)
     # Test2: to see if all courses have a term and credits
     assert(len(get_ambiguous_courses(course_dict)) == 0)
 
     print("Performing course search...")
+    print()
+
+    # --- INPUT INFORMATION ---
+
     goal_conditions = [("CS", "major"), ("MATH", "4650"), ("MATH", "3640")]
     initial_state = []
+
+    # --- END INPUT INFO ---
+
+    print("Search goals: ")
+    for (dept, c) in goal_conditions:
+        print(dept + ' ' + c)
+    print()
+    print("Initial states: ")
+    for (dept, c) in initial_state:
+        print(dept + ' ' + c)
+    print()
+
+    start_time = time.time()
     schedule = course_scheduler(course_dict, goal_conditions, initial_state)
+    run_time_ms = 1000 * (time.time() - start_time)
+
+    print("Scheduler ran in " + str(run_time_ms) + "ms")
+    print()
     print("Schedule output: ")
+    print()
     pretty_print(schedule)
 
 # ---SCHEDULER CODE---:
@@ -84,6 +109,7 @@ def course_scheduler(course_descriptions, goal_conditions, initial_state):
     schedule = Scheduler(course_descriptions, goal_conditions, initial_state)
     return schedule.formulate_schedule()
 
+# schedule: list of ((department, course), (year, term), credit hours) tuples
 def pretty_print(schedule):
     for ((debt, num), (season, year), credits) in schedule:
         print("Course: " + debt + " " + num + ", Term: " + year + " " + season + ", Credits: " + str(credits))

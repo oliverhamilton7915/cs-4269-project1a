@@ -1,3 +1,9 @@
+# Group Members
+# - Max Cummings
+# - Alex Cho
+# - Jacob Feldstein
+# - Oliver Hamilton
+
 class Scheduler:
     def __init__(self, catalog, goals, initial):
 
@@ -15,18 +21,19 @@ class Scheduler:
             assert course in catalog
 
         self.catalog = catalog
+        self.initial_goals = goals
         self.goal_courses = set(goals)
         self.initial_courses = initial
 
         # Here we make this into a set for quick lookup
         self.satisfied_prereqs = set(initial)
-        self.unsatisfied_prereqs = set(goals)
 
         # Elements will be added to this list as we perform our planning
         self.terms = []
 
     # This is the method we call from our parent course_scheduler function from in group7_scheduler.py.
-    # We want it to start with an initially empty schedule that
+    # We want it to start with an initially empty schedule and either return [] if scheduling is impossible,
+    # or the schedule if it is possible.
     def formulate_schedule(self):
         assert(len(self.terms) == 0)  # We only want to call this method when we are starting from scratch.
         season = "Spring"
@@ -50,16 +57,22 @@ class Scheduler:
                 flat_schedule.append(c)
         return flat_schedule
 
-    # Guidelines:
-    # 1. maximum 18 credits/semester
-    # 2. schedule should include as few semesters as possible
-    # 3. if full schedule cannot fit into 8 total terms (i.e. 4 years college), then we should return None (see spec).
+    # Season: "Fall" or "Spring"
+    # Year: "Freshman", "Sophomore", "Junior", or "Senior"
+    # Calling this method adds a term to self.terms which is full of classes that should be taken in that current term
     def formulate_term(self, season, year):
+        # Guidelines:
+        # 1. maximum 18 credits/semester
+        # 2. schedule should include as few semesters as possible
+        # 3. if full schedule cannot fit into 8 total terms (i.e. 4 years college), then we should return None (see spec).
         term_schedule = []  # will hold things like (("CS", "1101"), ("Spring", "Freshman"), 3)
         term_set = set()
         unreachable_courses = set()
         term_credits = 0
 
+        # This code of carries out the iterative deepening of the search. Each time we have a non-terminal semester and
+        # a non-empty goal_courses set, we pick an item from our fringe of remaining requirements and either add it to
+        # or schedule, or pick out its satisfying prereqs to add to our goal_courses set.
         while len(self.goal_courses) > 0:  # while we still have courses to take
             possible_course = self.pick_goal_objective(season)
             course_credits = int(self.catalog[possible_course].credits)
@@ -99,11 +112,14 @@ class Scheduler:
         # add our term to the overall schedule
         self.terms.append(term_schedule)
 
+    # season: "Fall" or "Spring"
+    # This method takes either an abstract course or a course with the lowest number from the fringe (self.goals) and
+    # returns that course to the calling method. Here, course number represents our search heuristic.
     def pick_goal_objective(self, season):
         # 1. if there is abstract class return it on sight
         # 2. Otherwise, pick class with lowest possible number. This is our heuristic.
         #   Reason: the courses with the lowest course numbers are the most likely to be the start of course
-        #           chains that are the longest and would otherwise prohibit one from graduating on time.
+        #   chains that are the longest and would otherwise prohibit one from graduating on time.
 
         goal_list = list(self.goal_courses)
 
@@ -111,14 +127,16 @@ class Scheduler:
         for course in goal_list:
             if season not in self.catalog[course].terms:
                 continue
-            if not course[1][0].isnumeric():
+            if not course[1][:-1].isnumeric():  # chop off last character because of writing courses (i.e. 1200W)
                 return course
             if course[1] < lowest_course_num:
                 lowest_course_num = course[1]
                 lowest_dept = course[0]
         return lowest_dept, lowest_course_num
 
-    # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course
+    # goal: course tuple (i.e. ("CS","2201")
+    # This function gives the minimum set of requirements necessary to allow our enrollment in the goal course.
+    # It does so by cross referencing self.satisfied_prereqs with the DNF prereq options enumerated in self.catalog
     def get_minimal_prereqs(self, goal):
         dnf = self.catalog[goal].prereqs
         if len(dnf) > 0:
@@ -132,3 +150,9 @@ class Scheduler:
                     best_option = challenger
             return best_option
         return []
+
+    # this method clears the schedule computed by the scheduler
+    def clear_scheduler(self):
+        self.terms = []
+        self.satisfied_prereqs = set(self.initial_courses)
+        self.goal_courses = set(self.initial_goals)
