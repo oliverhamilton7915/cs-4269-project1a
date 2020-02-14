@@ -63,20 +63,21 @@ def main(argv):
     # 3
     # ('Spring', 'Fall')
     # ((('CS', '2201'),),)
-
     print("Running tests...")
     print()
     # Test1: to see if all prerequirements (prereq) are in the file.
     assert(len(get_unsatisfied_prereqs(course_dict)) == 0)
     # Test2: to see if all courses have a term and credits
     assert(len(get_ambiguous_courses(course_dict)) == 0)
+    # Test3: to see if we properly recognize impossible scheduling objectives
+    assert(check_proper_scheduling(course_dict))
 
     print("Performing course search...")
     print()
 
     # --- INPUT INFORMATION ---
 
-    goal_conditions = [("CS", "major"), ("MATH", "4650"), ("MATH", "3640")]
+    goal_conditions = [("CS", "major")]
     initial_state = []
 
     # --- END INPUT INFO ---
@@ -135,6 +136,14 @@ def get_ambiguous_courses(course_dict):
         if key in [course for prereq in course_dict[key].prereqs for course in prereq]:
             ambiguous_courses.append(key)
     return ambiguous_courses
+
+def check_proper_scheduling(course_dict):
+    test_schedule1 = Scheduler(course_dict, [("CS","major")], []) # We should be able to complete this objective
+    len_schedule1 = len(test_schedule1.formulate_schedule())
+    test_schedule2 = Scheduler(course_dict, [("CS","major"), ("MATH","4650"), ("BME","3300")], [])
+    # We should NOT be able to complete this
+    len_schedule2 = len(test_schedule2.formulate_schedule())
+    return len_schedule1 > 0 and len_schedule2 == 0
 
 if __name__ == "__main__":
     main(sys.argv)

@@ -139,9 +139,9 @@ class Scheduler:
     # It does so by cross referencing self.satisfied_prereqs with the DNF prereq options enumerated in self.catalog
     def get_minimal_prereqs(self, goal):
         dnf = self.catalog[goal].prereqs
-        if goal[1][:4] == "open":
+        if goal[1][:4] == "open" or goal[1][:7] == "science" or goal[1][:10] == "depthother":
             # We enter this block of code when we are trying to get the minimum prereqs for
-            # an open elective goal objective.
+            # an an abstract course bucket that cannot have prereqs currently contained in our self.goal_objectives
             i = 0
             while dnf[i][0] in self.goal_courses:
                 i += 1
